@@ -1,6 +1,6 @@
 from numpy import array, exp, pi
 
-from cirq_simulations.utilities.utilities import KET_ONE_STATE_VECTOR, KET_PLUS_STATE_VECTOR, KET_ZERO_STATE_VECTOR, \
+from quantum_simulations.utilities.utilities import KET_ONE_STATE_VECTOR, KET_PLUS_STATE_VECTOR, KET_ZERO_STATE_VECTOR, \
     states_are_equal, tensor
 
 

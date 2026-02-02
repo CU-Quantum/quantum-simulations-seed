@@ -7,9 +7,9 @@ from cirq import Circuit, \
     ResetChannel, Simulator, \
     StateVectorTrialResult
 
-from cirq_simulations.custom_dataclasses.state_and_measurements import StateAndMeasurements
-from cirq_simulations.globals.configuration_simulation import ConfigurationSimulationManager
-from cirq_simulations.utilities.utilities import KET_ZERO_STATE_VECTOR, \
+from quantum_simulations.custom_dataclasses.state_and_measurements import StateAndMeasurements
+from quantum_simulations.globals.configuration_simulation import ConfigurationSimulationManager
+from quantum_simulations.utilities.utilities import KET_ZERO_STATE_VECTOR, \
     TYPE_STATE_VECTOR, TYPE_STATE_VECTOR_OR_DENSITY_MATRIX, tensor, \
     trace_out_ancillas_in_zero_state
 

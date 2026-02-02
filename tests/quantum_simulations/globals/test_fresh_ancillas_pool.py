@@ -1,7 +1,7 @@
 import pytest
 from cirq import LineQubit
 
-from cirq_simulations.globals.fresh_ancillas_pool import FreshAncillasPool
+from quantum_simulations.globals.fresh_ancillas_pool import FreshAncillasPool
 
 
 class TestFreshAncillasPool:

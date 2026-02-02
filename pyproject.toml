@@ -1,11 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "magic-states"
+name = "quantum-simulations-seed"
 version = "0.1.0"
-description = "Add your description here"
+description = "Base quantum simulations code."
 requires-python = ">=3.13"
 dependencies = [
     "cirq>=1.6.1",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [dependency-groups]
 dev = [

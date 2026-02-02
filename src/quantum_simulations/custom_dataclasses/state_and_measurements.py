@@ -5,7 +5,7 @@ from numpy import array
 from numpy._typing import NDArray
 from numpy.ma.core import allequal
 
-from cirq_simulations.utilities.utilities import TYPE_STATE_VECTOR_OR_DENSITY_MATRIX, states_are_equal
+from quantum_simulations.utilities.utilities import TYPE_STATE_VECTOR_OR_DENSITY_MATRIX, states_are_equal
 
 
 @dataclass

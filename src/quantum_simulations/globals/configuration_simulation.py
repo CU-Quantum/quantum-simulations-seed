@@ -1,4 +1,4 @@
-from cirq_simulations.custom_dataclasses.configuration_simulation import ConfigurationSimulation
+from quantum_simulations.custom_dataclasses.configuration_simulation import ConfigurationSimulation
 
 
 class ConfigurationSimulationManager:

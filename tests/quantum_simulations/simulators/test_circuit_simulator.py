@@ -1,9 +1,9 @@
 from cirq import Circuit, LineQubit, M, X
 from numpy import array
 
-from cirq_simulations.custom_dataclasses.state_and_measurements import StateAndMeasurements
-from cirq_simulations.simulators.circuit_simulator import CircuitSimulatorStateVector
-from cirq_simulations.utilities.utilities import KET_ZERO_STATE_VECTOR, tensor
+from quantum_simulations.custom_dataclasses.state_and_measurements import StateAndMeasurements
+from quantum_simulations.simulators.circuit_simulator import CircuitSimulatorStateVector
+from quantum_simulations.utilities.utilities import KET_ZERO_STATE_VECTOR, tensor
 
 
 class TestCircuitSimulator:
