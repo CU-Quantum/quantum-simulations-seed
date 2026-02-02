@@ -1,0 +1,13 @@
+[project]
+name = "magic-states"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "cirq>=1.6.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
