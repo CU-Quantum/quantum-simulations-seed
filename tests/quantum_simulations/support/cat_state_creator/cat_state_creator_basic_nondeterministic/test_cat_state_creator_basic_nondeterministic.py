@@ -1,9 +1,10 @@
 from functools import cached_property
 
+import numpy as np
 import pytest
-from cirq import Circuit, CircuitOperation, Gate, I, LineQubit, NoiseModel, OP_TREE, Operation, X
+from cirq import Circuit, CircuitOperation, LineQubit, NoiseModel, OP_TREE, Operation
+from cirq.testing import SingleQubitGate
 
-from quantum_simulations.conditions.verification_is_zero import VerificationIsZero
 from quantum_simulations.globals.fresh_ancillas_pool import FreshAncillasPool
 from quantum_simulations.simulators.circuit_simulator import CircuitSimulatorStateVector
 from quantum_simulations.support.cat_state_creator.cat_state_creator_basic_nondeterministic.cat_state_creator_basic_nondeterministic import \
@@ -48,22 +49,19 @@ class TestCatStateCreatorBasicNondeterministic:
         return states_are_equal(state.state, tensor(expected_target_qubits_state))
 
 
-class BitFlipNumberOfTimesChannel(Gate):
+class BitFlipNumberOfTimesChannel(SingleQubitGate):
     def __init__(self, num_times_to_flip: int):
         super().__init__()
         self.num_times_ran = 0
         self._num_times_to_flip = num_times_to_flip
 
-    def _num_qubits_(self) -> int:
-        return 1
-
-    def _decompose_(self, qubits):
-        target_qubit = qubits[0]
-        if self.num_times_ran >= self._num_times_to_flip:
-            yield I(target_qubit)
-        else:
-            yield X(target_qubit)
+    def _unitary_(self):
+        has_run_enough_times = self.num_times_ran >= self._num_times_to_flip
         self.num_times_ran += 1
+        if has_run_enough_times:
+            return np.array([[1, 0], [0, 1]])
+        else:
+            return np.array([[0, 1], [1, 0]])
 
 
 class BitFlipNumberOfTimesNoiseModel(NoiseModel):
