@@ -68,13 +68,13 @@ PARAMETERS = {
     "RepetitionCode": StateParameters(
         zero=ParametersForStateEncodingTest(
             code=RepetitionCodeOneLogical(num_qubits=ExpectedStatesRepetition().arbitrary_num_qubits),
-            expected_state=ExpectedStatesRepetition().get_logical_zero_density_matrix(),
-            initial_data_state=tensor(*[KET_ZERO_DENSITY_MATRIX] * ExpectedStatesRepetition().arbitrary_num_qubits),
+            expected_state=ExpectedStatesRepetition().get_logical_zero_state_vector(),
+            initial_data_state=tensor(*[KET_ZERO_STATE_VECTOR] * ExpectedStatesRepetition().arbitrary_num_qubits),
         ),
         one=ParametersForStateEncodingTest(
             code=RepetitionCodeOneLogical(num_qubits=ExpectedStatesRepetition().arbitrary_num_qubits),
-            expected_state=ExpectedStatesRepetition().get_logical_one_density_matrix(),
-            initial_data_state=tensor(*[KET_ONE_DENSITY_MATRIX] * ExpectedStatesRepetition().arbitrary_num_qubits),
+            expected_state=ExpectedStatesRepetition().get_logical_one_state_vector(),
+            initial_data_state=tensor(*[KET_ONE_STATE_VECTOR] * ExpectedStatesRepetition().arbitrary_num_qubits),
         ),
     ),
     "CatParityCode": StateParameters(
@@ -128,25 +128,25 @@ PARAMETERS = {
     "SteaneCode": StateParameters(
         zero=ParametersForStateEncodingTest(
             code=SteaneCode(),
-            expected_state=ExpectedStatesSteane().get_logical_zero_density_matrix(),
-            initial_data_state=tensor(*[KET_ZERO_DENSITY_MATRIX] * 7),
+            expected_state=ExpectedStatesSteane().get_logical_zero_state_vector(),
+            initial_data_state=tensor(*[KET_ZERO_STATE_VECTOR] * 7),
         ),
         one=ParametersForStateEncodingTest(
             code=SteaneCode(),
-            expected_state=ExpectedStatesSteane().get_logical_one_density_matrix(),
-            initial_data_state=tensor(*[KET_ONE_DENSITY_MATRIX] * 7),
+            expected_state=ExpectedStatesSteane().get_logical_one_state_vector(),
+            initial_data_state=tensor(*[KET_ONE_STATE_VECTOR] * 7),
         ),
     ),
     "ShorsRepetitionCode": StateParameters(
         zero=ParametersForStateEncodingTest(
             code=ShorsRepetitionCode(),
-            expected_state=ExpectedStatesShor().get_logical_zero_density_matrix(),
-            initial_data_state=tensor(*[KET_ZERO_DENSITY_MATRIX] * 9),
+            expected_state=ExpectedStatesShor().get_logical_zero_state_vector(),
+            initial_data_state=tensor(*[KET_ZERO_STATE_VECTOR] * 9),
         ),
         one=ParametersForStateEncodingTest(
             code=ShorsRepetitionCode(),
-            expected_state=ExpectedStatesShor().get_logical_one_density_matrix(),
-            initial_data_state=tensor(*[tensor(KET_ONE_DENSITY_MATRIX, *[KET_ZERO_DENSITY_MATRIX] * 2)] * 3),
+            expected_state=ExpectedStatesShor().get_logical_one_state_vector(),
+            initial_data_state=tensor(*[tensor(KET_ONE_STATE_VECTOR, *[KET_ZERO_STATE_VECTOR] * 2)] * 3),
         ),
     ),
 }

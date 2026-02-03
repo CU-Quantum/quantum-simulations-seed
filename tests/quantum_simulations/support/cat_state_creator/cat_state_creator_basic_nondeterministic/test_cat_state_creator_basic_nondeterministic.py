@@ -1,3 +1,5 @@
+from functools import cached_property
+
 import pytest
 from cirq import Circuit, CircuitOperation, Gate, I, LineQubit, NoiseModel, OP_TREE, Operation, X
 
@@ -21,15 +23,18 @@ class TestCatStateCreatorBasicNondeterministic:
         self._circuit_constructing_and_verifying_3_qubit_cat_state = preparer.get_cat_state_circuit()
 
     def test_creates_cat_state(self):
+        noise_channel = BitFlipNumberOfTimesNoiseModel(num_times_to_flip=0)
         circuit = self._circuit_constructing_and_verifying_3_qubit_cat_state
-        assert self._successfully_created_3_qubit_cat_state(circuit=circuit)
-        assert self._number_of_repetitions(circuit=circuit) == 1
+        circuit_noisy = circuit.with_noise(noise_channel)
+        assert self._successfully_created_3_qubit_cat_state(circuit=circuit_noisy)
+        assert noise_channel.bit_flip_number_of_times_channel.num_times_ran == 1
 
     def test_retries_if_invalid(self):
+        noise_channel = BitFlipNumberOfTimesNoiseModel(num_times_to_flip=1)
         circuit = self._circuit_constructing_and_verifying_3_qubit_cat_state
-        circuit_noisy = circuit.with_noise(BitFlipOnceNoiseModel())
+        circuit_noisy = circuit.with_noise(noise_channel)
         assert self._successfully_created_3_qubit_cat_state(circuit=circuit_noisy)
-        assert self._number_of_repetitions(circuit=circuit) == 2
+        assert noise_channel.bit_flip_number_of_times_channel.num_times_ran == 2
 
     def _successfully_created_3_qubit_cat_state(self, circuit: Circuit):
         initial_state = tensor(*[KET_ZERO_STATE_VECTOR] * self._num_qubits)
@@ -42,36 +47,35 @@ class TestCatStateCreatorBasicNondeterministic:
         expected_target_qubits_state = get_cat_state_vector(num_qubits=self._num_qubits)
         return states_are_equal(state.state, tensor(expected_target_qubits_state))
 
-    def _number_of_repetitions(self, circuit: Circuit) -> int:
-        number_of_measurements_per_repetition = 2
-        operation: CircuitOperation = circuit.moments[0].operations[0]
-        resolver: VerificationIsZero = operation.untagged.repeat_until
-        return resolver._last_num_measurements // number_of_measurements_per_repetition
 
-
-class BitFlipOnceNoiseModel(NoiseModel):
-    def __init__(self):
+class BitFlipNumberOfTimesChannel(Gate):
+    def __init__(self, num_times_to_flip: int):
         super().__init__()
-        self._added_noise = False
-
-    def noisy_operation(self, operation: Operation) -> OP_TREE:
-        circuit = operation.untagged.circuit.unfreeze()
-        circuit.insert(1, BitFlipOnceChannel().on(operation.qubits[1]))
-        return CircuitOperation(circuit.freeze(), use_repetition_ids=False, repeat_until=operation.untagged.repeat_until),
-
-
-class BitFlipOnceChannel(Gate):
-    def __init__(self):
-        super().__init__()
-        self._caused_bit_flip = False
+        self.num_times_ran = 0
+        self._num_times_to_flip = num_times_to_flip
 
     def _num_qubits_(self) -> int:
         return 1
 
     def _decompose_(self, qubits):
         target_qubit = qubits[0]
-        if self._caused_bit_flip:
+        if self.num_times_ran >= self._num_times_to_flip:
             yield I(target_qubit)
         else:
             yield X(target_qubit)
-            self._caused_bit_flip = True
+        self.num_times_ran += 1
+
+
+class BitFlipNumberOfTimesNoiseModel(NoiseModel):
+    def __init__(self, num_times_to_flip: int):
+        super().__init__()
+        self._num_times_to_flip = num_times_to_flip
+
+    def noisy_operation(self, operation: Operation) -> OP_TREE:
+        circuit = operation.untagged.circuit.unfreeze()
+        circuit.insert(1, self.bit_flip_number_of_times_channel.on(operation.qubits[1]))
+        return CircuitOperation(circuit.freeze(), use_repetition_ids=False, repeat_until=operation.untagged.repeat_until)
+
+    @cached_property
+    def bit_flip_number_of_times_channel(self) -> BitFlipNumberOfTimesChannel:
+        return BitFlipNumberOfTimesChannel(num_times_to_flip=self._num_times_to_flip)
