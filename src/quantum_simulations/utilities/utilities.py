@@ -67,8 +67,24 @@ def trace_out_ancillas_in_zero_state(state: TYPE_STATE_VECTOR_OR_DENSITY_MATRIX,
             return partial_trace(rho=state, keep_qubits=list(range(num_qubits - num_ancillas)))
 
 
+def int_to_binary_array(num: int, num_elements: int) -> list[int]:
+    return list(map(int, bin(num)[2:].rjust(num_elements, '0')))
+
+
+def binary_array_to_int(binary_array: list[int]) -> int:
+    return int(''.join(map(str, binary_array)), 2)
+
+
 def tensor(*states: TYPE_STATE_VECTOR_OR_DENSITY_MATRIX) -> TYPE_STATE_VECTOR_OR_DENSITY_MATRIX:
     return kron(*states, shape_len=len(states[0].shape)) if states else array([])
+
+
+def cx_sequentially_closer_qubits_from_first(qubits: list[LineQubit]) -> list[Operation]:
+    return list(reversed(cx_sequentially_further_qubits_from_first(qubits=qubits)))
+
+
+def cx_sequentially_further_qubits_from_first(qubits: list[LineQubit]) -> list[Operation]:
+    return [X(qubits[i]).controlled_by(qubits[0]) for i in range(1, len(qubits))]
 
 
 def states_are_equal(state1: TYPE_STATE_VECTOR_OR_DENSITY_MATRIX, state2: TYPE_STATE_VECTOR_OR_DENSITY_MATRIX) -> bool:
@@ -77,3 +93,8 @@ def states_are_equal(state1: TYPE_STATE_VECTOR_OR_DENSITY_MATRIX, state2: TYPE_S
     has_global_phase = len(no_nans) and np.all(np.isclose(no_nans, no_nans[0], 1e-5))
     global_phase = no_nans[0] if has_global_phase else 1
     return np.isclose(abs(global_phase), 1, atol=1e-4) and allclose(state1 / global_phase, state2, atol=1e-7)
+
+
+def get_sympy_conditions_all_equal(measurement_keys: list[MeasurementKey], values: list[int]) -> list[sympy.Expr]:
+    measurement_symbols = sympy.symbols([measurement_key.name for measurement_key in measurement_keys])
+    return [sympy.Eq(measurement_symbol, bit) for measurement_symbol, bit in zip(measurement_symbols, values)]
