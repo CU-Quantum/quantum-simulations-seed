@@ -13,9 +13,9 @@ class MeasurementKeyWithStableHash(MeasurementKey, HasJSONNamespace):
 
     def __repr__(self):
         if self.path:
-            return f"stim_experiments.conditions.MeasurementKeyWithStableHash(path={self.path!r}, name='{self.name}')"
+            return f"quantum_simulations.conditions.MeasurementKeyWithStableHash(path={self.path!r}, name='{self.name}')"
         else:
-            return f"stim_experiments.conditions.MeasurementKeyWithStableHash(name='{self.name}')"
+            return f"quantum_simulations.conditions.MeasurementKeyWithStableHash(name='{self.name}')"
 
     @classmethod
     def parse_serialized(cls, key_str: str) -> MeasurementKey:
@@ -24,4 +24,4 @@ class MeasurementKeyWithStableHash(MeasurementKey, HasJSONNamespace):
 
     @classmethod
     def _json_namespace_(cls):
-        return 'stim_experiments.utilities.measurement_key_with_stable_hash'
+        return 'quantum_simulations.utilities.measurement_key_with_stable_hash'
